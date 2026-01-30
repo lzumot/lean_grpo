@@ -1,0 +1,32 @@
+# Algebra Domain-Specific Training Configuration
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+
+# Algorithm
+algorithm: "grpo"
+algorithm_config:
+  group_size: 8
+  epsilon: 0.2
+
+# Training
+learning_rate: 5e-6
+num_train_epochs: 3
+per_device_train_batch_size: 4
+num_generations: 8
+
+# Domain-specific settings
+# Use with: --algo-config for domain scorer
+reward_type: "shaped"
+
+# Custom reward scorer configuration
+# This uses the algebra domain scorer
+reward_scorer: "algebra"
+scorer_weights:
+  domain: 0.4
+  difficulty: 0.3
+  efficiency: 0.3
+
+# Output
+output_dir: "outputs/algebra_domain"
+report_to: "wandb"

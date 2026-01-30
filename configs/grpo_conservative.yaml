@@ -1,0 +1,39 @@
+# Conservative GRPO Configuration
+# Lower learning rate, larger groups, stable training
+# Good for: Hard problems, unstable training, production use
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 16  # Higher rank for more capacity
+
+# Algorithm
+algorithm: "grpo"
+algorithm_config:
+  group_size: 16            # Larger groups for stable gradients
+  normalize_advantages: true
+  epsilon: 0.1              # Conservative clipping
+  epsilon_high: 0.1
+  beta: 0.01                # Small KL penalty for stability
+
+# Training (conservative)
+learning_rate: 2e-6         # Lower LR for stability
+num_train_epochs: 2
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+warmup_ratio: 0.2           # More warmup
+max_grad_norm: 0.05         # Strong gradient clipping
+
+# Generation
+num_generations: 16
+max_prompt_length: 4096     # Longer context
+max_completion_length: 1024
+max_proof_steps: 30         # Allow longer proofs
+temperature: 0.8            # Less exploration
+
+# Reward (strict)
+reward_type: "strict"
+
+# Output
+output_dir: "outputs/grpo_conservative"
+logging_steps: 10
+save_steps: 1000
+report_to: "wandb"

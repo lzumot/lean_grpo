@@ -15,6 +15,9 @@ from lean_grpo.trainer import LeanGRPOTrainer, LeanGRPOConfig, LeanGRPOPipeline
 from lean_grpo.rollout import ProofRolloutGenerator
 from lean_grpo.inference_client import InferenceClient
 
+# Reward scorers
+from lean_grpo import rewards
+
 # Export algorithms
 from lean_grpo.algorithms import (
     RLAlgorithm,

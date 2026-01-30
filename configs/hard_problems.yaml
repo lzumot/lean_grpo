@@ -1,0 +1,52 @@
+# Configuration for Hard Problems
+# Combines difficulty-based rewards with DrGRPO for stability
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 16
+
+# Algorithm (DrGRPO for stability)
+algorithm: "drgrpo"
+algorithm_config:
+  group_size: 16
+  
+  # Robust normalization for hard problems
+  advantage_norm_method: "winsorized"
+  winsorize_quantile: 0.95
+  remove_outliers: true
+  outlier_threshold: 2.5
+  
+  # Conservative clipping
+  use_asymmetric_clip: true
+  clip_high: 0.15
+  clip_low: 0.15
+  
+  # Unbiased KL
+  use_unbiased_kl: true
+  kl_estimator: "schulman"
+  
+  # Conservative learning
+  negative_adv_scale: 0.7
+
+# Training
+learning_rate: 2e-6
+num_train_epochs: 5
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+warmup_ratio: 0.15
+max_grad_norm: 0.05
+num_generations: 16
+
+# Reward settings for hard problems
+reward_type: "shaped"
+reward_config:
+  completion_reward: 2.0      # Higher reward for completion
+  step_reward: 0.1            # More credit per step
+  error_penalty: -0.05        # Less penalty for errors (encourage exploration)
+  goal_reduction_reward: 0.2  # Reward for progress
+  max_steps_for_partial: 30   # Allow longer partial rewards
+
+# Output
+output_dir: "outputs/hard_problems"
+logging_steps: 10
+save_steps: 500
+report_to: "wandb"

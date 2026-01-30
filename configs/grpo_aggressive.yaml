@@ -1,0 +1,38 @@
+# Aggressive GRPO Configuration
+# Higher learning rate, smaller groups, faster iteration
+# Good for: Quick experiments, simple problems
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+
+# Algorithm
+algorithm: "grpo"
+algorithm_config:
+  group_size: 4  # Smaller groups for faster iteration
+  normalize_advantages: true
+  epsilon: 0.3   # More aggressive clipping
+  beta: 0.0
+
+# Training (aggressive)
+learning_rate: 1e-5        # Higher LR
+num_train_epochs: 5        # More epochs
+per_device_train_batch_size: 8
+gradient_accumulation_steps: 1
+warmup_ratio: 0.05         # Less warmup
+max_grad_norm: 0.2         # Less gradient clipping
+
+# Generation
+num_generations: 4         # Smaller groups
+max_prompt_length: 2048
+max_completion_length: 512
+max_proof_steps: 15        # Shorter proofs
+temperature: 1.2           # More exploration
+
+# Reward (lenient to encourage exploration)
+reward_type: "lenient"
+
+# Output
+output_dir: "outputs/grpo_aggressive"
+logging_steps: 5
+save_steps: 250
+report_to: "wandb"

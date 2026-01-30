@@ -1,0 +1,37 @@
+# DGPO with Preference Learning Configuration
+# Use when you have pairwise preferences between proofs
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+
+# Algorithm
+algorithm: "dgpo"
+algorithm_config:
+  group_size: 8
+  normalize_advantages: true
+  
+  # DPO-style preference learning
+  use_dpo_loss: true
+  dpo_beta: 0.1
+  dpo_coef: 0.3  # Mix of GRPO and DPO
+  
+  # Preference learning
+  use_ranked_preferences: false
+  pairwise_margin: 0.1
+  num_preference_pairs: 4
+  
+  epsilon: 0.2
+  beta: 0.0
+
+# Training
+learning_rate: 5e-6
+num_train_epochs: 3
+per_device_train_batch_size: 4
+num_generations: 8
+
+# Reward
+reward_type: "shaped"
+
+# Output
+output_dir: "outputs/dgpo_preferences"
+report_to: "wandb"

@@ -1,0 +1,44 @@
+# DrGRPO with Rank Normalization Configuration
+# Alternative normalization method
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+
+# Algorithm
+algorithm: "drgrpo"
+algorithm_config:
+  group_size: 8
+  
+  # Importance sampling
+  is_level: "token"
+  
+  # KL estimation
+  use_unbiased_kl: true
+  kl_estimator: "schulman"
+  
+  # Rank-based normalization (most robust)
+  advantage_norm_method: "rank"
+  remove_outliers: true
+  outlier_threshold: 3.0
+  
+  # Asymmetric clipping
+  use_asymmetric_clip: true
+  clip_high: 0.2
+  clip_low: 0.15
+  
+  # Negative advantage handling
+  negative_adv_scale: 0.8
+  negative_adv_max_is: 2.0
+
+# Training
+learning_rate: 5e-6
+num_train_epochs: 3
+per_device_train_batch_size: 4
+num_generations: 8
+
+# Reward
+reward_type: "shaped"
+
+# Output
+output_dir: "outputs/drgrpo_rank"
+report_to: "wandb"

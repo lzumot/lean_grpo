@@ -1,0 +1,50 @@
+# GSPO for Multi-GPU Distributed Training Configuration
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+
+# Algorithm
+algorithm: "gspo"
+algorithm_config:
+  # Large groups for distributed training
+  target_group_size: 32
+  min_group_size: 16
+  max_group_size: 64
+  
+  # Dynamic sizing
+  use_dynamic_groups: true
+  group_size_adjustment_rate: 0.1
+  target_advantage_std: 1.0
+  
+  # Synchronization
+  sync_frequency: 4           # Sync every 4 steps
+  use_consensus: true
+  consensus_weight: 0.3
+  consensus_window: 10
+  consensus_temperature: 0.5
+  
+  # Diverse group composition
+  composition_strategy: "diverse"
+  diversity_bonus: 0.1
+  
+  # Adaptive clipping based on diversity
+  adaptive_clipping: true
+  diversity_clip_factor: 2.0
+  
+  # Cross-group entropy (optional)
+  cross_group_entropy: false
+  cross_group_entropy_coef: 0.01
+
+# Training
+learning_rate: 5e-6
+num_train_epochs: 3
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 2
+num_generations: 32
+
+# Reward
+reward_type: "shaped"
+
+# Output
+output_dir: "outputs/gspo_multi_gpu"
+report_to: "wandb"

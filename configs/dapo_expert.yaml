@@ -1,0 +1,47 @@
+# DAPO for Expert-Level Problems Configuration
+# For very hard problems with sparse success
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 16
+
+# Algorithm
+algorithm: "dapo"
+algorithm_config:
+  group_size: 8
+  
+  # Population-based normalization
+  use_population_norm: true
+  population_size: 200        # Large population
+  advantage_ema_decay: 0.99
+  
+  # Asymmetric loss (favor positive advantages)
+  use_asymmetric_loss: true
+  positive_advantage_scale: 1.2
+  negative_advantage_scale: 0.5
+  
+  # Aggressive clipping for hard problems
+  epsilon: 0.15
+  ratio_clip_high: 1.3
+  ratio_clip_low: 0.4
+  
+  # Sparse reward handling
+  use_reward_shaping: true
+  sparse_reward_threshold: 0.85
+  sparse_reward_bonus: 0.2
+  
+  # Advantage clipping
+  advantage_clip: 3.0
+
+# Training
+learning_rate: 3e-6
+num_train_epochs: 5
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 2
+num_generations: 8
+
+# Reward (lenient for exploration)
+reward_type: "lenient"
+
+# Output
+output_dir: "outputs/dapo_expert"
+report_to: "wandb"

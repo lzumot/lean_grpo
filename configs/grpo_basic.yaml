@@ -1,0 +1,40 @@
+# Basic GRPO Configuration
+# Good starting point for general use
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+lora_alpha: 8
+
+# Algorithm
+algorithm: "grpo"
+algorithm_config:
+  group_size: 8
+  normalize_advantages: true
+  epsilon: 0.2
+  epsilon_high: 0.2
+  importance_sampling_level: "token"
+  beta: 0.0
+
+# Training
+learning_rate: 5e-6
+num_train_epochs: 3
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 1
+warmup_ratio: 0.1
+max_grad_norm: 0.1
+
+# Generation
+num_generations: 8
+max_prompt_length: 2048
+max_completion_length: 512
+max_proof_steps: 20
+temperature: 1.0
+
+# Reward (standard shaped)
+reward_type: "shaped"
+
+# Output
+output_dir: "outputs/grpo_basic"
+logging_steps: 10
+save_steps: 500
+report_to: "wandb"
