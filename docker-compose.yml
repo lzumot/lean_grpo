@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    runtime: nvidia
+    ports:
+      - "8000:8000"
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    command: >
+      --model Qwen/Qwen2.5-7B-Instruct
+      --dtype bfloat16
+      --tensor-parallel-size 1
+      --gpu-memory-utilization 0.8
+      --max-model-len 4096
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  training:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    runtime: nvidia
+    volumes:
+      - .:/workspace
+      - outputs:/workspace/outputs
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-dummy-key}
+      - VLLM_URL=http://vllm:8000/v1
+      - WANDB_API_KEY=${WANDB_API_KEY:-}
+      - CUDA_VISIBLE_DEVICES=0
+    command: >
+      bash -c "
+        echo 'Waiting for vLLM to be ready...' &&
+        sleep 60 &&
+        lean-grpo train examples/example_theorems.jsonl
+        --inference-url http://vllm:8000/v1
+        --output-dir outputs
+        --num-generations 8
+      "
+    depends_on:
+      vllm:
+        condition: service_healthy
+
+volumes:
+  outputs:

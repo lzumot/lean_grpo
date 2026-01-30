@@ -1,0 +1,69 @@
+# Default configuration for Lean GRPO training
+
+# Model configuration
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+lora_alpha: 8
+
+# Algorithm selection
+algorithm: "grpo"  # Options: grpo, drgrpo, dapo, gspo
+
+# Algorithm-specific configuration
+algorithm_config:
+  # GRPO settings
+  group_size: 8
+  normalize_advantages: true
+  
+  # DrGRPO settings (when algorithm: drgrpo)
+  # use_dpo_loss: false
+  # dpo_beta: 0.1
+  # dpo_coef: 0.0
+  
+  # DAPO settings (when algorithm: dapo)
+  # use_population_norm: true
+  # population_size: 100
+  # use_asymmetric_loss: true
+  # positive_advantage_scale: 1.0
+  # negative_advantage_scale: 0.8
+  
+  # GSPO settings (when algorithm: gspo)
+  # use_consensus: true
+  # consensus_weight: 0.3
+  # sync_frequency: 1
+
+# Training configuration
+learning_rate: 5e-6
+num_train_epochs: 1
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 1
+warmup_ratio: 0.1
+max_grad_norm: 0.1
+
+# Group/Generation configuration
+num_generations: 8
+max_prompt_length: 2048
+max_completion_length: 512
+beta: 0.0  # KL penalty
+
+# Proof generation configuration
+max_proof_steps: 20
+temperature: 1.0
+
+# Reward configuration
+reward_type: "shaped"  # binary, shaped, lenient, strict
+
+# vLLM configuration
+use_vllm: true
+gpu_memory_utilization: 0.6
+
+# Inference configuration
+inference_url: "http://localhost:8000/v1"
+# inference_key: set via OPENAI_API_KEY env var
+
+# Output configuration
+output_dir: "outputs"
+logging_steps: 10
+save_steps: 500
+
+# Logging
+report_to: "wandb"

@@ -1,0 +1,10 @@
+{"name": "add_zero", "statement": "theorem add_zero (n : Nat) : n + 0 = n", "context": "", "imports": ["Mathlib"]}
+{"name": "add_succ", "statement": "theorem add_succ (n m : Nat) : n + succ m = succ (n + m)", "context": "", "imports": ["Mathlib"]}
+{"name": "zero_add", "statement": "theorem zero_add (n : Nat) : 0 + n = n", "context": "", "imports": ["Mathlib"]}
+{"name": "add_comm", "statement": "theorem add_comm (n m : Nat) : n + m = m + n", "context": "", "imports": ["Mathlib"]}
+{"name": "add_assoc", "statement": "theorem add_assoc (n m p : Nat) : (n + m) + p = n + (m + p)", "context": "", "imports": ["Mathlib"]}
+{"name": "mul_zero", "statement": "theorem mul_zero (n : Nat) : n * 0 = 0", "context": "", "imports": ["Mathlib"]}
+{"name": "mul_succ", "statement": "theorem mul_succ (n m : Nat) : n * succ m = n * m + n", "context": "", "imports": ["Mathlib"]}
+{"name": "zero_mul", "statement": "theorem zero_mul (n : Nat) : 0 * n = 0", "context": "", "imports": ["Mathlib"]}
+{"name": "mul_comm", "statement": "theorem mul_comm (n m : Nat) : n * m = m * n", "context": "", "imports": ["Mathlib"]}
+{"name": "mul_distrib", "statement": "theorem mul_distrib (n m p : Nat) : n * (m + p) = n * m + n * p", "context": "", "imports": ["Mathlib"]}

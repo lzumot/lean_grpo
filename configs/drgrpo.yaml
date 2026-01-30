@@ -1,0 +1,58 @@
+# Dr. GRPO (GRPO Done Right) Configuration
+# Fixes common issues with standard GRPO
+# Best for: When standard GRPO has stability issues
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+
+# Algorithm
+algorithm: "drgrpo"
+algorithm_config:
+  # Group configuration
+  group_size: 8
+  
+  # Importance sampling
+  is_level: "token"  # 'token', 'sequence', 'geometric_mean'
+  
+  # KL estimation (unbiased)
+  use_unbiased_kl: true
+  kl_estimator: "schulman"  # 'schulman', 'abs', 'mse'
+  
+  # Robust advantage normalization
+  advantage_norm_method: "winsorized"  # 'standard', 'winsorized', 'rank'
+  winsorize_quantile: 0.95
+  remove_outliers: false
+  outlier_threshold: 3.0
+  
+  # Asymmetric clipping
+  use_asymmetric_clip: true
+  clip_high: 0.2
+  clip_low: 0.2
+  
+  # Negative advantage handling
+  negative_adv_scale: 1.0
+  negative_adv_max_is: 2.0
+  
+  # Numerical stability
+  logprob_min: -20.0
+  logprob_max: 0.0
+  
+  # Entropy bonus
+  use_entropy_bonus: false
+  entropy_coef: 0.01
+  
+  # Group robustness
+  min_group_std: 1e-4
+
+# Training
+learning_rate: 5e-6
+num_train_epochs: 3
+per_device_train_batch_size: 4
+num_generations: 8
+
+# Reward
+reward_type: "shaped"
+
+# Output
+output_dir: "outputs/drgrpo"
+report_to: "wandb"

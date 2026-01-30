@@ -1,0 +1,50 @@
+# GSPO (Group-Synchronized Policy Optimization) Configuration
+# Best for: Large-scale distributed training
+
+base_model: "Qwen/Qwen2.5-7B-Instruct"
+lora_rank: 8
+
+# Algorithm
+algorithm: "gspo"
+algorithm_config:
+  # Group configuration
+  target_group_size: 8
+  min_group_size: 4
+  max_group_size: 16
+  
+  # Dynamic sizing
+  use_dynamic_groups: true
+  group_size_adjustment_rate: 0.1
+  target_advantage_std: 1.0
+  
+  # Synchronization
+  sync_frequency: 1
+  use_consensus: true
+  consensus_weight: 0.3
+  consensus_window: 5
+  consensus_temperature: 0.5
+  
+  # Group composition
+  composition_strategy: "similar_reward"  # random, similar_reward, diverse
+  diversity_bonus: 0.1
+  
+  # Adaptive clipping
+  adaptive_clipping: true
+  diversity_clip_factor: 2.0
+  
+  # Cross-group entropy
+  cross_group_entropy: false
+  cross_group_entropy_coef: 0.01
+
+# Training
+learning_rate: 5e-6
+num_train_epochs: 3
+per_device_train_batch_size: 4
+num_generations: 8
+
+# Reward
+reward_type: "shaped"
+
+# Output
+output_dir: "outputs/gspo"
+report_to: "wandb"
